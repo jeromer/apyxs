@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<module>
+    <name>mod_apyxs_test</name>
+    <configuration>
+        <!-- AP_INIT_NO_FLAGS -->
+        <directive>
+            <name>ExampleNoArgs</name>
+            <type>AP_INIT_NO_ARGS</type>
+        </directive>
+
+        <!-- AP_INIT_FLAG -->
+        <directive>
+            <name>ExampleOnOffFlag</name>
+            <type>AP_INIT_FLAG</type>
+            <value>On</value>
+        </directive>
+
+        <!-- AP_INIT_TAKE1|2|3|n -->
+        <directive>
+            <name>ExampleTakeString</name>
+            <type>AP_INIT_TAKE2</type>
+            <value>Value1</value>
+            <value>Value2</value>
+        </directive>
+
+        <!-- AP_INIT_ITERATE -->
+        <directive>
+            <name>ExampleIterate</name>
+            <type>AP_INIT_ITERATE</type>
+        </directive>
+
+        <!-- AP_INIT_ITERATE2 -->
+        <directive>
+            <name>ExampleIterate2</name>
+            <type>AP_INIT_ITERATE2</type>
+        </directive>
+
+        <!-- AP_INIT_RAW_ARGS -->
+        <directive>
+            <name>ExampleRawArgs</name>
+            <type>AP_INIT_RAW_ARGS</type>
+        </directive>
+    </configuration>
+</module>
