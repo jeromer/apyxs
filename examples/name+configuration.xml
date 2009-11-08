@@ -6,6 +6,7 @@
         <directive>
             <name>ExampleNoArgs</name>
             <type>AP_INIT_NO_ARGS</type>
+            <scope>ACCESS_CONF</scope>
         </directive>
 
         <!-- AP_INIT_FLAG -->

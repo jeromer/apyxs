@@ -101,6 +101,11 @@ class ApacheModuleConfigurationDirective:
         name = configurationDirective.find('name').text
         type = configurationDirective.find('type').text
 
+        scope = "RSRC_CONF"
+
+        if configurationDirective.find('scope') != None:
+            scope = configurationDirective.find('scope').text
+            
         valueList = configurationDirective.getiterator('value')
         values = []
         for value in valueList:
@@ -108,6 +113,7 @@ class ApacheModuleConfigurationDirective:
         
         return {'name'  : name,
                 'type'  : type,
+                'scope' : scope,
                 'values': values}
 
 class ApacheModuleHook:
