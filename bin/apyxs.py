@@ -84,6 +84,14 @@ class ApacheModuleName:
         return self.descriptionTree.find('/name').text
 
 class ApacheModuleConfigurationDirective:
+
+    validScopeList = ['RSRC_CONF',
+                      'ACCESS_CONF',
+                      'OR_OPTIONS',
+                      'OR_FILEINFO',
+                      'OR_INDEXES',
+                      'EXEC_ON_READ']
+
     def __init__(self, descriptionTree):
         self.descriptionTree = descriptionTree
 
@@ -105,6 +113,8 @@ class ApacheModuleConfigurationDirective:
 
         if configurationDirective.find('scope') != None:
             scope = configurationDirective.find('scope').text
+            if scope not in ApacheModuleConfigurationDirective.validScopeList:
+                raise ApacheModuleConfigurationInvalidScopeException()
             
         valueList = configurationDirective.getiterator('value')
         values = []
