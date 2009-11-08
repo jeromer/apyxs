@@ -49,6 +49,9 @@ def main():
 #         except Exception:
 #             print("Error opening {0} not an XML file" . format(options.filename))
 #             exit(1)
+#         except ApacheModuleConfigurationInvalidScopeException as ex:
+#             print("Invalid scope : {0}" . format(ex.foundScope))
+#             exit(1)
    
 # Module handling -------------
 
@@ -114,7 +117,7 @@ class ApacheModuleConfigurationDirective:
         if configurationDirective.find('scope') != None:
             scope = configurationDirective.find('scope').text
             if scope not in ApacheModuleConfigurationDirective.validScopeList:
-                raise ApacheModuleConfigurationInvalidScopeException()
+                raise ApacheModuleConfigurationInvalidScopeException(scope)
             
         valueList = configurationDirective.getiterator('value')
         values = []
@@ -165,6 +168,12 @@ class ApacheModuleHook:
                 'predecessor':predecessor,
                 'successor':successor,
                 'position':position}
+
+# Exceptions ------
+class ApacheModuleConfigurationInvalidScopeException(Exception):
+    def __init__(self, foundScope):
+        Exception.__init__(self)
+        self.foundScope = foundScope
 
 if __name__ == "__main__":
     main()
