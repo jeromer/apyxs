@@ -59,22 +59,22 @@ class ApacheModule:
     def getName(self):
         apacheModuleName = ApacheModuleName(self.descriptionTree)
         name = apacheModuleName.getName()
-        print("[DEBUG] Module name is : {0}" . format(name))
         return name
 
     def getConfiguration(self):
         apacheModuleConfigurationDirective = ApacheModuleConfigurationDirective(self.descriptionTree)
         directiveList = apacheModuleConfigurationDirective.getDirectiveList()
-        print("[DEBUG] Configuration directives are : {0}" . format(directiveList))
         return directiveList
 
     def getHooks(self):
-        print("getHooks")
+        apacheModuleHook = ApacheModuleHook(self.descriptionTree)
+        hookList = apacheModuleHook.getHookList()
+        return hookList
 
     def generateModuleSkeleton(self):
-        print("Generating module skeleton")
-        self.getName()
-        self.getConfiguration()
+        name                       = self.getName()
+        configurationDirectiveList = self.getConfiguration()
+        hookList                   = self.getHooks()
 
 class ApacheModuleName:
     def __init__(self, descriptionTree):
@@ -84,17 +84,18 @@ class ApacheModuleName:
         return self.descriptionTree.find('/name').text
 
 class ApacheModuleConfigurationDirective:
-
     def __init__(self, descriptionTree):
         self.descriptionTree = descriptionTree
-        self.directiveList   = []
 
     def getDirectiveList(self):
-        configuration = self.descriptionTree.find('/configuration')
+        configurationTag = self.descriptionTree.find('/configuration')
 
-        directiveList = configuration.getiterator('directive')
+        directiveList = configurationTag.getiterator('directive')
+        directives = []
         for configurationDirective in directiveList:
-            self.directiveList.append(self.getDirective(configurationDirective))
+            directives.append(self.getDirective(configurationDirective))
+
+        return directives
 
     def getDirective(self, configurationDirective):
         name = configurationDirective.find('name').text
@@ -105,11 +106,49 @@ class ApacheModuleConfigurationDirective:
         for value in valueList:
             values.append(value.text)
         
-        directive = {'name'  : name,
-                     'type'  : type,
-                     'values': values}
+        return {'name'  : name,
+                'type'  : type,
+                'values': values}
 
-        return directive
+class ApacheModuleHook:
+    def __init__(self, descriptionTree):
+        self.descriptionTree = descriptionTree
+
+    def getHookList(self):
+        hooksTag = self.descriptionTree.find('/hooks')
+
+        if hooksTag != None:
+            hookList = hooksTag.getiterator('hook')
+            hooks = []
+            for hook in hookList:
+                hooks.append(self.getHook(hook))
+
+            return hooks
+        else:
+            return []
+
+    def getHook(self, hook):
+        name = hook.find('name').text
+        type = hook.find('type').text
+
+        predecessor = "NULL"
+        successor   = "NULL"
+        position    = "MIDDLE"
+
+        if hook.find('predecessor') != None:
+            predecessor = hook.find('predecessor').text
+
+        if hook.find('successor') != None:
+            successor = hook.find('successor').text
+
+        if hook.find('position') != None:
+            position = hook.find('position').text
+
+        return {'name':name,
+                'type':type,
+                'predecessor':predecessor,
+                'successor':successor,
+                'position':position}
 
 if __name__ == "__main__":
     main()
