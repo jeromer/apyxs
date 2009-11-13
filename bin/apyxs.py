@@ -81,6 +81,7 @@ class ApacheModule:
 
         apModuleDeclareDataCode = self.generateModuleDeclarationCode(name)
         registerHooksCode       = self.generateModuleRegisterHookCode(hookList)
+        commandTableCode        = self.generateConfigurationDirectiveTable(configurationDirectiveList)
 
     def generateModuleDeclarationCode(self, moduleName):
         return("""\
@@ -109,6 +110,23 @@ class ApacheModule:
         delimiter = "\n"
         return(delimiter.join(linesOfCode))
 
+    def generateConfigurationDirectiveTable(self, configurationDirectiveList):
+        linesOfCode = ['static const command_rec command_table[] = ', '{']
+
+        for configurationDirective in configurationDirectiveList:
+            linesOfCode.append('    ' + configurationDirective['type'] + '('
+                               + '"' + configurationDirective['name'] + '", '
+                               + 'cmd_' + configurationDirective['name'].lower() + ', '
+                               + "NULL, "
+                               + configurationDirective['scope'] + ', '
+                               + '"' + configurationDirective['description'] + '"'
+                               + '),')
+
+        linesOfCode.append('    { NULL }')
+        linesOfCode.append('};')
+        delimiter = "\n"
+        return(delimiter.join(linesOfCode))
+        
 class ApacheModuleName:
     def __init__(self, descriptionTree):
         self.descriptionTree = descriptionTree
