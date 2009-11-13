@@ -79,7 +79,8 @@ class ApacheModule:
         configurationDirectiveList = self.getConfiguration()
         hookList                   = self.getHooks()
 
-        apModuleDeclareData = self.generateModuleDeclarationCode(name)
+        apModuleDeclareDataCode = self.generateModuleDeclarationCode(name)
+        registerHooksCode       = self.generateModuleRegisterHookCode(hookList)
 
     def generateModuleDeclarationCode(self, moduleName):
         return("""\
@@ -93,6 +94,20 @@ class ApacheModule:
                 %(moduleName)s_register_hooks  /* register hooks */
                 };
         """ % locals())
+
+    def generateModuleRegisterHookCode(self, hookList):
+        linesOfCode = ['static void url_alias_register_hooks(apr_pool_t *p)', '{']
+
+        for hook in hookList:
+            linesOfCode.append('    ' + hook['type'] + '('
+                                + hook['name']        + ', '
+                                + hook['predecessor'] + ', '
+                                + hook['successor']   + ', '
+                                + hook['position']    + ');')
+
+        linesOfCode.append('}')
+        delimiter = "\n"
+        return(delimiter.join(linesOfCode))
 
 class ApacheModuleName:
     def __init__(self, descriptionTree):
