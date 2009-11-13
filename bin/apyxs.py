@@ -109,8 +109,9 @@ class ApacheModuleConfigurationDirective:
         return directives
 
     def getDirective(self, configurationDirective):
-        name = configurationDirective.find('name').text
-        type = configurationDirective.find('type').text
+        name        = configurationDirective.find('name').text
+        type        = configurationDirective.find('type').text
+        description = configurationDirective.find('description').text
 
         scope = "RSRC_CONF"
 
@@ -124,10 +125,11 @@ class ApacheModuleConfigurationDirective:
         for value in valueList:
             values.append(value.text)
         
-        return {'name'  : name,
-                'type'  : type,
-                'scope' : scope,
-                'values': values}
+        return {'name'       : name,
+                'type'       : type,
+                'scope'      : scope,
+                'values'     : values,
+                'description':description}
 
 class ApacheModuleHook:
     def __init__(self, descriptionTree):
