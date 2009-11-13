@@ -79,6 +79,21 @@ class ApacheModule:
         configurationDirectiveList = self.getConfiguration()
         hookList                   = self.getHooks()
 
+        apModuleDeclareData = self.generateModuleDeclarationCode(name)
+
+    def generateModuleDeclarationCode(self, moduleName):
+        return("""\
+        module AP_MODULE_DECLARE_DATA %(moduleName)s = {
+                STANDARD20_MODULE_STUFF,
+                config_dir_create,        /* create per-dir    config structures */
+                config_dir_merge,         /* merge  per-dir    config structures */
+                config_server_create,     /* create per-server config structures */
+                config_server_merge,      /* merge  per-server config structures */
+                command_table,            /* table of config file commands       */
+                %(moduleName)s_register_hooks  /* register hooks */
+                };
+        """ % locals())
+
 class ApacheModuleName:
     def __init__(self, descriptionTree):
         self.descriptionTree = descriptionTree
